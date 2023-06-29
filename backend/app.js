@@ -4,6 +4,7 @@ const express = require('express');
 const helmet = require('helmet'); // Установка: npm install --save helmet
 const { default: mongoose } = require('mongoose');
 const { errors } = require('celebrate');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
@@ -16,6 +17,7 @@ const NotFoundError = require('./utils/errors/NotFoundError');
 const { PORT = 3000, MONGO_URL = 'mongodb://127.0.0.1/mestodb' } = process.env;
 
 const app = express();
+app.use(cors());
 app.use(helmet()); // Набор middleware-функций для защиты от веб-уязвимостей
 
 mongoose
