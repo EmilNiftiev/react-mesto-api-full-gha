@@ -7,7 +7,7 @@
 
 - [**Ссылка на репозиторий проекта.**](https://github.com/EmilNiftiev/react-mesto-api-full-gha)
 
-IP-адрес 84.201.132.60;
+IP 84.201.132.60;
 
 Frontend https://mesto.frontend.nomoreparties.sbs;
 
