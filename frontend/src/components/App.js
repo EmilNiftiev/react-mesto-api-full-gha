@@ -100,7 +100,7 @@ function App() {
     if (loggedIn) {
       Promise.all([api.getUserInfo(), api.getInitialCards()])
         .then(([data, cards]) => {
-          setCurrentUser({ ...currentUser, ...data });
+          setCurrentUser(data);
           setCards(cards);
         })
         .catch(handleError);
@@ -133,7 +133,7 @@ function App() {
 
   function handleCardLike(card) {
     // Снова проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const isLiked = card.likes.some((id) => id === currentUser._id);
     // Отправляем запрос в API и получаем обновлённые данные карточки
     api
       .changeLikeCardStatus(card._id, !isLiked)
@@ -207,9 +207,10 @@ function App() {
       apiAuth
         .checkToken(token)
         .then((res) => {
-          if (res && res.data) {
+          if (res) {
+            api.setToken(token);
             setLoggedIn(true);
-            setCurrentUser({ ...currentUser, email: res.data.email });
+            // setCurrentUser({ ...currentUser, email: res.data.email });
             navigate("/");
           }
         })
@@ -227,9 +228,13 @@ function App() {
       .login(data)
       .then((res) => {
         if (res && res.token) {
-          setCurrentUser({ ...currentUser, email: data.email });
+          // setCurrentUser({ ...currentUser, email: data.email });
+          setCurrentUser(currentUser);
           localStorage.setItem("jwt", res.token);
-          checkToken();
+          api.setToken(res.token);
+          setLoggedIn(true);
+          navigate('/');
+          // checkToken();
         }
       })
       .catch(handleError);
@@ -240,6 +245,7 @@ function App() {
   function logOut() {
     setLoggedIn(false);
     setCurrentUser(defaultUser);
+    api.setToken(null);
     localStorage.removeItem("jwt");
   }
 

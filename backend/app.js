@@ -13,6 +13,7 @@ const { signinValidator, signupValidator } = require('./middlewares/validation')
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const NotFoundError = require('./utils/errors/NotFoundError');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000, MONGO_URL = 'mongodb://127.0.0.1/mestodb' } = process.env;
 
@@ -26,7 +27,7 @@ mongoose
   .catch((err) => console.log('Ошбика подключения к БД', err));
 
 mongoose.set({ runValidators: true });
-
+app.use(requestLogger); // Подключаем логгер до обработчиков роутов
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -39,7 +40,7 @@ app.use('/', cardRouter);
 app.all('/*', (req, res, next) => {
   next(new NotFoundError('Такой страницы не существует'));
 });
-
+app.use(errorLogger); // Подключаем после обр. роутов, но ДО обр. ошибок
 app.use(errors()); // Миддлвэр errors, чтобы отправить клиенту ошибку
 app.use(errorHandler); // Наш централизованный обработчик ошибок
 

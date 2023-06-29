@@ -11,6 +11,10 @@ class Api {
     return res.json();
   }
 
+  setToken(token) {
+    this._headers.Authorization = `Bearer ${token}`;
+  }
+
   getInitialCards() {
     return fetch(this._serverUrl + "/cards", {
       method: "GET",
@@ -94,9 +98,10 @@ class Api {
 }
 
 const api = new Api({
-  serverUrl: "https://mesto.nomoreparties.co/v1/cohort-61",
+  serverUrl: "http://127.0.0.1:3000",
+  // serverUrl: "https://api.emilniftiev.nomoreparties.sbs",
   headers: {
-    authorization: "8e6df19e-255a-4130-b10d-a123ccd744e8",
+    Authorization: "",
     "Content-Type": "application/json",
   },
 });

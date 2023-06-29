@@ -13,14 +13,14 @@ const login = (req, res, next) => {
   User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
-      res.send({ _id: token });
+      res.send({ token });
     })
     .catch(next);
 };
 
 const getUsers = (req, res, next) => {
   User.find({})
-    .then((users) => res.status(STATUS_CODES.OK).send({ users }))
+    .then((users) => res.status(STATUS_CODES.OK).send(users))
     .catch(next);
 };
 
@@ -29,7 +29,7 @@ const getCurrentUser = (req, res, next) => {
     .orFail(() => {
       throw new NotFoundError('Пользователь по указанному _id не найден');
     })
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send(user))
     .catch(next);
 };
 
@@ -66,7 +66,7 @@ const getUserById = (req, res, next) => {
   User.findById(req.params.userId)
     .orFail(new NotFoundError('Пользователь по указанному _id не найден'))
     .then((user) => {
-      res.status(STATUS_CODES.OK).send({ data: user });
+      res.status(STATUS_CODES.OK).send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
