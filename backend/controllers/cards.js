@@ -61,7 +61,7 @@ const dislikeCard = (req, res, next) => {
 };
 
 const deleteCard = (req, res, next) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  Card.findById(req.params.cardId)
     .orFail(new NotFoundError('Карточка с указанным _id не найдена'))
     .then((card) => {
       if (card.owner.toString() !== req.user._id) {
